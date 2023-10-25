@@ -4,7 +4,7 @@ ESP32는 Espressif에서 개발한 마이크로프로세서로 구체적인 모�
 
 ## IoT Development Framework
 
-다음 [repo](https://github.com/espressif/esp-idf)를 참조해주시기 바랍니다.
+다음 [repo](https://github.com/espressif/esp-idf)를 참조해주시기 바랍니다. ESP-IDF는 RTOS를 내장하고 있습니다.
 
 ## Deep learning Resource
 
