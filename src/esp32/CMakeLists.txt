@@ -8,4 +8,4 @@ cmake_minimum_required(VERSION 3.16)
 # set(EXTRA_COMPONENT_DIRS /workspaces/esp32/components)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(esp32_main)
+project(stargazer)
