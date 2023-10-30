@@ -1,0 +1,8 @@
+# configuration
+.devcontainer/
+.vscode/
+
+# build
+**/build/**
+**/sdkconfig
+**/sdkconfig.old

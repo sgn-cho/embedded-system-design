@@ -23,9 +23,7 @@ Stargazer는 다음 몇 가지 기술 과제를 해결하고자 합니다.
 
 ## Architectures
 
-[Zephyr](https://www.zephyrproject.org/) 위 구현을 목표로 합니다.
-
-추후 작성 예정
+![](ARCHITECTURE.png)
 
 ## Directories
 
