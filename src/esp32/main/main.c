@@ -1,9 +1,12 @@
-#include <stdio.h>
-#include <esp_log.h>
-#include <esp_chip_info.h>
-#include <esp_system.h>
-#include <esp_flash.h>
-#include <nvs_flash.h>
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/event_groups.h"
+#include "esp_system.h"
+#include "esp_wifi.h"
+#include "esp_event.h"
+#include "esp_log.h"
+#include "nvs_flash.h"
 
 const char *TAG = "main";
 
@@ -22,8 +25,8 @@ void __initialize_prequisites(void) {
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     ESP_LOGI(TAG, "event loop created");
 
-    wifi_init_sta();
-    ESP_LOGI(TAG, "wifi initialized");
+    // wifi_init_sta();
+    // ESP_LOGI(TAG, "wifi initialized");
 
     ESP_LOGI(TAG, "prequisites initialized");
     return;
