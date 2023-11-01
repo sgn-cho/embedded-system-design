@@ -23,6 +23,22 @@ static wifi_config_t wifi_cfg = {
     }
 };
 
+/* function prototypes */
+static void __wifi_event_handler(
+    void *arg,
+    esp_event_base_t event_base,
+    int32_t event_id,
+    void *event_data
+);
+static void __ip_event_handler(
+    void *arg,
+    esp_event_base_t event_base,
+    int32_t event_id,
+    void *event_data
+);
+static void __recover_wifi_connection(void);
+/* end of function prototypes */
+
 void init_wifi(void) {
     wifi_event_group = xEventGroupCreate();
 
