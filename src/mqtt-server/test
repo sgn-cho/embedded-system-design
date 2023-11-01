@@ -1,0 +1,23 @@
+#!/bin/bash
+PATH_LIST="./config ./data ./log"
+
+for path in $PATH_LIST; do
+    if test ! -d $path ; then
+        mkdir $path
+    fi
+done
+
+if test ! -f "./config/mosquitto.conf" ; then
+    echo -e "listener 1883\npersistence true\nallow_anonymous true" > ./config/mosquitto.conf
+fi
+
+REQUIRED_PACKAGE="mosquitto-clients"
+PACKAGE_INSTALLED=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PACKAGE | grep "install ok installed")
+echo checking for $REQUIRED_PACKAGE: $PACKAGE_INSTALLED
+if [ "" = "$PACKAGE_INSTALLED" ]; then
+    sudo apt-get -y install $REQUIRED_PACKAGE
+fi
+
+docker compose up
+# mosquitto_sub -t test_topic & \
+# mosquitto_pub -t test_topic -m "hello world";
