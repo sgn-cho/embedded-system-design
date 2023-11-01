@@ -40,6 +40,7 @@ static void __recover_wifi_connection(void);
 /* end of function prototypes */
 
 void init_wifi(void) {
+    esp_netif_create_default_wifi_sta();
     wifi_event_group = xEventGroupCreate();
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
@@ -57,7 +58,7 @@ void init_wifi(void) {
 
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
         IP_EVENT,
-        IP_EVENT_STA_GOT_IP,
+        ESP_EVENT_ANY_ID,
         &__ip_event_handler,
         NULL,
         &instance_got_ip
@@ -125,3 +126,4 @@ static void __ip_event_handler(
         xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
     }
 }
+

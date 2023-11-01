@@ -8,6 +8,7 @@
 #include <esp_event.h>
 
 #include "wifi/include/init.h"
+#include "mqtt5/include/init.h"
 
 const char *TAG = "main";
 
@@ -28,6 +29,9 @@ void __initialize_prequisites(void) {
 
     init_wifi();
     ESP_LOGI(TAG, "wifi initialized");
+
+    init_mqtt5();
+    ESP_LOGI(TAG, "mqtt5 initialized");
 
     ESP_LOGI(TAG, "prequisites initialized");
     return;
