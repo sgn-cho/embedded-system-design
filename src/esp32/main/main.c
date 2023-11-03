@@ -8,7 +8,7 @@
 #include <esp_event.h>
 
 #include "wifi/include/init.h"
-#include "mqtt5/include/init.h"
+#include "mqtt5/include/control.h"
 
 const char *TAG = "main";
 
