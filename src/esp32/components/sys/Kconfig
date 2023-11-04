@@ -1,0 +1,21 @@
+menu "System Initializations"
+
+    config ENABLE_TEMPERATURE_SENSOR
+        bool "Enable Temperature Sensor"
+        default y
+        help
+          Enable temperature sensor
+
+    config ENABLE_CAMERA
+        bool "Enable Camera"
+        default y
+        help
+          Enable camera
+    
+    config ENABLE_SOIL_MOISTURE_SENSOR
+        bool "Enable Soil Moisture Sensor"
+        default y
+        help
+          Enable soil moisture sensor
+
+endmenu
