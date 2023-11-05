@@ -1,6 +1,8 @@
 # configuration
 .devcontainer/
 .vscode/
+**/.idea/
+**/target/
 
 # build
 **/build/**
