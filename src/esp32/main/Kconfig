@@ -13,3 +13,12 @@ menu "Experimental features"
             Test MQTT5
 
 endmenu
+menu "Experimental Flag"
+    
+    config FLAG_TEST_WIFI_CSI
+        bool "Test WiFi CSI"
+        default f
+        help
+            Flag for Wi-Fi CSI functionality test
+
+endmenu
