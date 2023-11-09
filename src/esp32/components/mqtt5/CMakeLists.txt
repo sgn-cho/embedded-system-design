@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "control.c" "init.c"
+    SRCS "event.c" "control.c"
     INCLUDE_DIRS "include"
     REQUIRES mqtt
 )

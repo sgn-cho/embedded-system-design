@@ -6,4 +6,10 @@ menu "Experimental features"
         help
             Test WiFi AP
 
+    config TEST_MQTT5
+        bool "Test MQTT5"
+        default n
+        help
+            Test MQTT5
+
 endmenu

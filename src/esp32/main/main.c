@@ -11,6 +11,7 @@
 #include "mqtt5/include/control.h"
 #include "sys/include/sensord.h"
 #include "./test_wifi.h"
+#include <test_mqtt5.h>
 
 static const char *TAG = "main";
 
@@ -19,6 +20,10 @@ void app_main(void) {
 
 #if CONFIG_TEST_WIFI_AP
     test_ap();
+#endif
+
+#if CONFIG_TEST_MQTT5
+    test_mqtt5();
 #endif
 
     while (true) {

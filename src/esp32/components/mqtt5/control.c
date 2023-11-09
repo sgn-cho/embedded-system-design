@@ -1,22 +1,19 @@
 #include <mqtt_client.h>
 #include <esp_log.h>
-#include "./init.h"
+#include <esp_err.h>
+#include <esp_check.h>
+#include <event.h>
 
 #ifndef BROKER_URL
 #define BROKER_URL              CONFIG_BROKER_URL    
 #endif
-
-typedef struct connection_info_t {
-    char *topic;
-    int connection_cnt;
-} connection_info_t;
 
 static const char *TAG = "mqtt5";
 static esp_mqtt5_client_handle_t client;
 
 /* function prototypes */
 
-void __init_mqtt5(esp_mqtt_client_config_t *cfg);
+esp_err_t __init_mqtt5(esp_mqtt_client_config_t *cfg);
 
 /* end of function prototypes */
 
@@ -28,10 +25,27 @@ void init_mqtt5(void) {
     __init_mqtt5(&cfg);
 }
 
-void __init_mqtt5(esp_mqtt_client_config_t *cfg) {
+esp_err_t __init_mqtt5(esp_mqtt_client_config_t *cfg) {
+    esp_err_t ret;
+    
     client = esp_mqtt_client_init(cfg);
-    esp_mqtt_client_register_event(client, MQTT_EVENT_CONNECTED, __mqtt5_sys_event_handler, NULL);
-    esp_mqtt_client_start(client);
+    if (client == NULL) {
+        ESP_LOGE(TAG, "Failed to initialize mqtt client");
+        return ESP_FAIL;
+    }
+
+    ret = esp_mqtt_client_register_event(
+        client,
+        MQTT_EVENT_CONNECTED,
+        __mqtt5_sys_event_handler,
+        NULL
+    );
+    ESP_RETURN_ON_ERROR(ret, TAG, "Failed to register mqtt event handler");
+
+    ret = esp_mqtt_client_start(client);
+    ESP_RETURN_ON_ERROR(ret, TAG, "Failed to start mqtt client");
+
+    return ret;
 }
 
 esp_err_t publish_mqtt5_message(char *message, char *topic, int qos) {
