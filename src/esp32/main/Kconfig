@@ -1,0 +1,9 @@
+menu "Experimental features"
+
+    config TEST_WIFI_AP
+        bool "Test WiFi AP"
+        default n
+        help
+            Test WiFi AP
+
+endmenu

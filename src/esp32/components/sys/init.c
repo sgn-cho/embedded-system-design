@@ -8,7 +8,7 @@
 #include <esp_event.h>
 #include <driver/timer.h>
 
-const char *TAG = "sys";
+static const char *TAG = "sys";
 
 /* function prototypes */
 
@@ -20,7 +20,7 @@ static void __init_soil_moisture_sensor(void);
 /* end of fuction prototypes */
 
 
-void sys_init(void) {
+void sys_init_custom(void) {
     __init_prequisites();
 
     ESP_LOGD(TAG, "prequisites initialized");
