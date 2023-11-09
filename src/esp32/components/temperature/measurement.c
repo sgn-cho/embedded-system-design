@@ -5,7 +5,9 @@
 #include <esp_check.h>
 #include <esp_pm.h>
 #include <stdbool.h>
+#include <sys/include/msgd.h>
 #include <dht/dht.h>
+#include <sys/include/device_address.h>
 
 #define DHT_SENSOR_TYPE DHT_TYPE_AM2301
 #define DHT_GPIO_NUM GPIO_NUM_18
@@ -13,6 +15,8 @@
 static const char *TAG = "temperature measurement";
 
 static measurement_config_t current_config;
+
+extern QueueHandle_t sensor_data_queue;
 
 /* function prototypes */
 
@@ -32,15 +36,40 @@ esp_err_t init_measurement(measurement_config_t config) {
 }
 
 void task_temperature_measurement(void *params) {
-    while(true) {
-        float temp, humidity;
-        esp_err_t ret = __read_sensor_value(&temp, &humidity);
+    float temp, humidity;
+    sensor_message_t sensor_message;
+    esp_err_t idf_ret;
+    BaseType_t rtos_ret;
 
-        if (ret != ESP_OK) {
+    while(true) {
+        idf_ret = __read_sensor_value(&temp, &humidity);
+
+        if (idf_ret != ESP_OK) {
             ESP_LOGE(TAG, "Failed to read sensor value.");
         } else {
             ESP_LOGD(TAG, "Temperature: %f, Humidity: %f", temp, humidity);
-            
+
+            sensor_message.data = temp;
+            rtos_ret = xQueueSend(
+                sensor_data_queue,
+                (void *)&sensor_message,
+                portMAX_DELAY
+            );
+
+            if (rtos_ret != pdTRUE) {
+                ESP_LOGE(TAG, "Failed to send message to queue.");
+            }
+
+            sensor_message.data = humidity;
+            rtos_ret = xQueueSend(
+                sensor_data_queue,
+                (void *)&sensor_message,
+                portMAX_DELAY
+            );
+
+            if (rtos_ret != pdTRUE) {
+                ESP_LOGE(TAG, "Failed to send message to queue.");
+            }
         }
 
         vTaskDelay(pdMS_TO_TICKS(current_config.interval_ms));

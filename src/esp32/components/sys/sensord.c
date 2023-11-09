@@ -6,6 +6,7 @@
 #include <esp_log.h>
 #include <esp_check.h>
 #include <msgd.h>
+#include <temperature/include/task.h>
 #include <device_address.h>
 #include <string.h>
 
@@ -14,9 +15,8 @@ static const char *TAG = "sensord";
 /* function prototypes */
 
 static void __start_sensord(void);
-static void __start_temperature_sensor(void);
+static esp_err_t __start_temperature_sensor(void);
 static void __start_soil_sensor(void);
-static void __mock_temperature_sensor(void *params);
 static void __mock_soil_sensor(void *params);
 
 /* end of function prototypes */
@@ -39,15 +39,13 @@ void __start_sensord(void) {
     __start_soil_sensor();
 }
 
-static void __start_temperature_sensor(void) {
-    xTaskCreate(
-        __mock_temperature_sensor,
-        "temperature_sensor",
-        2048,
-        NULL,
-        5,
-        NULL
+static esp_err_t __start_temperature_sensor(void) {
+    ESP_RETURN_ON_ERROR(
+        start_temperature_sensor(),
+        TAG,
+        "Failed to start temperature sensor."
     );
+    return ESP_OK;
 }
 
 static void __start_soil_sensor(void) {
