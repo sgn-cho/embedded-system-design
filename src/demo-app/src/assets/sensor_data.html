@@ -1,0 +1,17 @@
+<html>
+<head>
+    <title>Sensor Data</title>
+    <link rel="stylesheet" type="text/css" href="css/sensor_data.css">
+</head>
+<body>
+    <h1>Sensor Data</h1>
+    <button id="start-mqtt" type="button">Start MQTT5 Streaming</button>
+    <script>
+        const socket = new WebSocket('ws://localhost:3000/sensor', ["ws"]);
+
+        socket.addEventListener("message", function (event) {
+            console.log(event.data);
+        });
+    </script>
+</body>
+</html>
