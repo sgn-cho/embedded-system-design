@@ -48,8 +48,8 @@ esp_err_t __init_mqtt5(esp_mqtt_client_config_t *cfg) {
     return ret;
 }
 
-esp_err_t publish_mqtt5_message(char *message, char *topic, int qos) {
-    int message_id = esp_mqtt_client_publish(client, topic, message, 0, qos, 0);
+esp_err_t publish_mqtt5_message(char *message, char *topic, int length, int qos) {
+    int message_id = esp_mqtt_client_publish(client, topic, message, length, qos, 0);
 
     if (qos == 1 || qos == 2) {
         // TODO!

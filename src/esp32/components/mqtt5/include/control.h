@@ -17,6 +17,6 @@ void init_mqtt5(void);
  * 
  * @return ESP_OK if successful, otherwise ESP_FAIL
 */
-esp_err_t publish_mqtt5_message(char *message, char *topic, int qos);
+esp_err_t publish_mqtt5_message(char *message, char *topic, int length, int qos);
 
 #endif

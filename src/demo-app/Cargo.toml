@@ -13,3 +13,5 @@ log = "0.4.20"
 paho-mqtt = { version = "0.12.3", features = ["bundled"] }
 tower = { version = "0.4", features = ["util"] }
 tower-http = { version = "0.4", features = ["fs", "trace"] }
+serde = { version = "1.0.192", features = ["derive"] }
+serde_json = "1.0.108"

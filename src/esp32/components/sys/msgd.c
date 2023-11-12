@@ -13,7 +13,7 @@ QueueHandle_t sensor_data_queue;
 QueueHandle_t camera_data_queue;
 
 #define MAX_QUEUE_LENGTH 10
-#define QUEUE_ITEM_SIZE sizeof(sensor_message_t)
+#define QUEUE_ITEM_SIZE sizeof(new_sensor_message_t)
 
 /* function prototypes */
 
@@ -27,7 +27,7 @@ void msgd_init(void) {
     xTaskCreate(
         __msgd_loop_sensor,
         "msgd_loop_sensor",
-        2048,
+        4096,
         NULL,
         5,
         NULL
@@ -40,17 +40,16 @@ static void __msgd_loop_sensor(void) {
         ESP_LOGE(TAG, "Sensor data queue is null.");
     }
 
-    sensor_message_t msg;
+    new_sensor_message_t msg;
 
     while(true) {
         if (xQueueReceive(sensor_data_queue, &msg, portMAX_DELAY) == pdTRUE) {
-            ESP_LOGI(TAG, "Received message: %d", (int)msg.data);
             esp_err_t ret = publish_mqtt5_message(
                 (char *)&msg.data,
-                "sensor_data",
+                msg.topic,
+                msg.length,
                 0
             );
-            ESP_LOGI(TAG, "%s", esp_err_to_name(ret));
         }
     }
 
