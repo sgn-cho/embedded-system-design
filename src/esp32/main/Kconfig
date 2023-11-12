@@ -12,6 +12,11 @@ menu "Experimental features"
         help
             Test MQTT5
 
+    config TEST_DEEP_LEARNING
+        bool "Test Deep Learning"
+        default n
+        help
+            Test Deep Learning
 endmenu
 menu "Experimental Flag"
     

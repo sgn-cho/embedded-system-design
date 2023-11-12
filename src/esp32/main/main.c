@@ -13,6 +13,7 @@
 #include "./test_wifi.h"
 #include <test_mqtt5.h>
 #include "csi/include/init.h"
+#include "face-dl/include/detect_face.h"
 
 static const char *TAG = "main";
 
@@ -43,6 +44,10 @@ void app_main(void) {
 
 #if CONFIG_TEST_MQTT5
     test_mqtt5();
+#endif
+
+#if CONFIG_TEST_DEEP_LEARNING
+    detect_face();
 #endif
 
     while (true) {
