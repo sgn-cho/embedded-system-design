@@ -1,7 +1,8 @@
 ## IDF Component Manager Manifest File
 dependencies:
-  espressif/esp-dl: "*"
+  espressif/esp_jpeg: "*"
   espressif/esp32-camera: "*"
+  espressif/esp-dl: "*"
   ## Required IDF version
   idf:
     version: ">=4.1.0"

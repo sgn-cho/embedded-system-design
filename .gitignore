@@ -3,11 +3,13 @@
 .vscode/
 **/.idea/
 **/target/
+.cache/
 
 # build
 **/build/**
 **/sdkconfig
 **/sdkconfig.old
 
-## managed_components
+# managed_components
 **/managed_components/**
+dependencies.lock

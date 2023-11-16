@@ -1,9 +1,15 @@
 #include <stdio.h>
-#include <esp_log.h>
-#include <nvs_flash.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include "include/test_camera.h"
+#include "include/test_decode.h"
+#include "include/test_deep_learning.h"
 
-static const char *TAG = "main";
+uint8_t *pixels;
 
 void app_main(void) {
-    ESP_LOGI(TAG, "test");
+    printf("Hello world!\n");
+    task1();
+    test_decode_task(&pixels);
+    test_deep_learning(&pixels);
 }
