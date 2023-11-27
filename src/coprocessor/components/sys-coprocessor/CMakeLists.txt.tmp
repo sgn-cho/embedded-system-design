@@ -1,0 +1,8 @@
+idf_component_register(
+    SRCS            init.c
+    INCLUDE_DIRS    .
+                    ./include
+                    ../../../components
+    REQUIRES        nvs_flash
+                    esp_netif
+)

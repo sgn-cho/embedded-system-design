@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <esp_event_loop.h>
+#include <esp_event.h>
 #include <esp_log.h>
+#include <esp_check.h>
 #include "esp_system.h"
-#include <nvs_flash.h>
 #include <sys/param.h>
 
 #include "freertos/FreeRTOS.h"
@@ -15,13 +15,10 @@
 #include "esp_vfs_fat.h"
 
 #include "esp_camera.h"
-#include "esp_camera_pin.h"
+#include "config.h"
 
-static const char *TAG = "Camera";
-#define MOUNT_POINT "/sdcard"
-static uint64_t counter = 0;
-
-#define BOARD_ESP32CAM_AITHINKER 1
+static const char *TAG = "camera";
+static const char mount_point[] = "/sdcard";
 
 static camera_config_t camera_config = {
     .pin_pwdn = CAM_PIN_PWDN,
@@ -50,26 +47,55 @@ static camera_config_t camera_config = {
     .pixel_format = PIXFORMAT_JPEG, //YUV422,GRAYSCALE,RGB565,JPEG
     .frame_size = FRAMESIZE_XGA,    //QQVGA-UXGA Do not use sizes above QVGA when not JPEG
 
-    .jpeg_quality = 4, //0-63 lower number means higher quality
+    .jpeg_quality = 6, //0-63 lower number means higher quality
     .fb_count = 1       //if more than one, i2s runs in continuous mode. Use only with JPEG
 };
 
-static esp_err_t init_camera()
-{
-    //initialize the camera
-    esp_err_t err = esp_camera_init(&camera_config);
-    if (err != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Camera Init Failed");
-        return err;
+/* function prototype */
+
+static esp_err_t init_camera_driver(void);
+static esp_err_t init_sdcard(void);
+static void init_gpio(void);
+
+/* end of function prototype */
+
+esp_err_t init_camera(void) {
+    esp_err_t ret;
+
+    ret = init_camera_driver();
+    if (ret == ESP_OK) ret = init_sdcard();
+
+    return ret;
+}
+
+esp_err_t take_picture(char *filepath) {
+    camera_fb_t *picture = esp_camera_fb_get();
+    FILE *file = fopen(filepath, "w");
+
+    if (file != NULL) {
+        fwrite(picture->buf, 1, picture->len, file);
+        ESP_LOGI(TAG, "File saved: %s", filepath);
+        free(picture->buf);
+        fclose(file);
+        return ESP_OK;
+    } 
+    else {
+        ESP_LOGE(TAG, "Failed to open file for writing");
+        free(picture->buf);
+        fclose(file);
+        return ESP_FAIL;
     }
+}
+
+static esp_err_t init_camera_driver(void) {
+    esp_err_t ret = esp_camera_init(&camera_config);
+    ESP_RETURN_ON_ERROR(ret, TAG, "Camera init failed with error");
 
     return ESP_OK;
 }
 
-static void init_sdcard()
-{
-    esp_err_t ret = ESP_FAIL;
+static esp_err_t init_sdcard(void) {
+    esp_err_t ret;
 
     esp_vfs_fat_sdmmc_mount_config_t mount_config = {
         .format_if_mount_failed = false,
@@ -78,53 +104,27 @@ static void init_sdcard()
     };
     sdmmc_card_t *card;
 
-    const char mount_point[] = MOUNT_POINT;
-    ESP_LOGI(TAG, "Initializing SD card");
-
     sdmmc_host_t host = SDMMC_HOST_DEFAULT();
     sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
 
-    ESP_LOGI(TAG, "Mounting SD card...");
+    init_gpio();
+
+    ret = esp_vfs_fat_sdmmc_mount(
+        mount_point,
+        &host,
+        &slot_config,
+        &mount_config,
+        &card);
+    
+    ESP_RETURN_ON_ERROR(ret, TAG, "SD card mount failed with error");
+
+    return ESP_OK;
+}
+
+static void init_gpio(void) {
     gpio_set_pull_mode(15, GPIO_PULLUP_ONLY);   // CMD, needed in 4- and 1- line modes
     gpio_set_pull_mode(2, GPIO_PULLUP_ONLY);    // D0, needed in 4- and 1-line modes
     gpio_set_pull_mode(4, GPIO_PULLUP_ONLY);    // D1, needed in 4-line mode only
     gpio_set_pull_mode(12, GPIO_PULLUP_ONLY);   // D2, needed in 4-line mode only
     gpio_set_pull_mode(13, GPIO_PULLUP_ONLY);   // D3, needed in 4- and 1-line modes
-
-    ret = esp_vfs_fat_sdmmc_mount(mount_point, &host, &slot_config, &mount_config, &card);
-
-    if (ret == ESP_OK)
-    {
-    ESP_LOGI(TAG, "SD card mount successfully!");
-    }
-    else
-    {
-    ESP_LOGE(TAG, "Failed to mount SD card VFAT filesystem. Error: %s", esp_err_to_name(ret));
-    }
-}
-
-
-void task1() {
-    init_camera();
-    init_sdcard();
-
-    ESP_LOGI(TAG, "Taking picture...");
-    camera_fb_t *pic = esp_camera_fb_get();
-    counter++;
-
-    char *pic_name = malloc(30 + sizeof(int64_t));
-    sprintf(pic_name, MOUNT_POINT"/pic_%lli.jpg", counter);
-    FILE *file = fopen(pic_name, "w");
-
-    if (file != NULL)
-    {
-        fwrite(pic->buf, 1, pic->len, file);
-        ESP_LOGI(TAG, "File saved: %s", pic_name);
-    }
-    else
-    {
-        ESP_LOGE(TAG, "Could not open file =(");
-    }
-    fclose(file);
-    free(pic_name);
 }

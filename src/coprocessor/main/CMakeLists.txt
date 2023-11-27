@@ -1,6 +1,5 @@
 set(SRCS    main.c
             test_camera.c
-            test_decode.c
             test_deep_learning.cpp
 )
 

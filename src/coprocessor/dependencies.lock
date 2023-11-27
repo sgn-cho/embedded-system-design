@@ -11,17 +11,11 @@ dependencies:
       service_url: https://api.components.espressif.com/
       type: service
     version: 2.0.6
-  espressif/esp_jpeg:
-    component_hash: 7ebea44283e9247b523f4e0e16ec45b002931664eab5d302eee918edb54c86c1
-    source:
-      service_url: https://api.components.espressif.com/
-      type: service
-    version: 1.0.5~1
   idf:
     component_hash: null
     source:
       type: idf
     version: 5.2.0
-manifest_hash: 35877411444e396e53d9a1ac59bc64a7a3b4adea8becb91d6b9442522b2c8195
+manifest_hash: 6cb13eab75caee355dec06bc0d9dbd4e0a5d0b1965e5ff59c268dc639371a386
 target: esp32
 version: 1.0.0
