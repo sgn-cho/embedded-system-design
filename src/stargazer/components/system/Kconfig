@@ -1,0 +1,15 @@
+menu "System component configuration"
+
+    config ENABLE_TEMPERATURE_SENSOR
+        bool "Enable temperature sensor"
+        default y
+        help
+            Enable temperature sensor
+        
+    config ENABLE_SOIL_MOISTURE_SENSOR
+        bool "Enable soil moisture sensor"
+        default y
+        help
+            Enable soil moisture sensor
+    
+endmenu
