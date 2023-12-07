@@ -1,0 +1,13 @@
+menu "Temperature sensor config"
+    config MEASUREMENT_INTERVAL
+        int "Measurement interval"
+        default 10000
+        help
+          Measurement interval in milliseconds
+
+    config MEASUREMENT_OFFSET
+        int "Measurement offset"
+        default 0
+        help
+          Measurement offset in milliseconds
+endmenu

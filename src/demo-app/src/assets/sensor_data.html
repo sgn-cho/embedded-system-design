@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sensor Data</title>
+    <link rel="stylesheet" type="text/css" href="css/sensor_data.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Sensor Data</h1>
+    <div>
+        <canvas id="temperature_chart" width="500" height="400"></canvas>
+        <canvas id="humidity_chart" width="500" height="400"></canvas>
+        <canvas id="soil_humidity_chart" width="500" height="400"></canvas>
+    </div>
+    <script>
+        function addData(_chart, _label, _data) {
+            _chart.data.labels.push(Date.now());
+            _chart.data.datasets[0].data.push(_data);
+            _chart.update();
+        }
+
+        function addChart(_element_id, _label) {
+            const ctx = document.getElementById(_element_id);
+            return new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: _label,
+                        data: []
+                    }]
+                },
+                options: { responsive: false }
+            });
+        }
+
+        const socket = new WebSocket("ws://localhost:3000/sensor", ["ws"]);
+
+        const temperature_chart = addChart('temperature_chart', 'temperature');
+        const humidity_chart = addChart('humidity_chart', 'humidity');
+        const soil_humidity_chart = addChart('soil_humidity_chart', 'soil_humidity');
+
+        socket.addEventListener("message", function (event) {
+            const data = JSON.parse(event.data);   
+            console.log(data);
+
+            if (data["sensor_type"] == "temperature_sensor") {
+                addData(temperature_chart, "temperature", data["sensor_value"]);
+            } else if (data["sensor_type"] == "humidity_sensor") {
+                addData(humidity_chart, "humidity", data["sensor_value"]);
+            } else if (data["sensor_type"] == "soil_sensor") {
+                addData(soil_humidity_chart, "soil_humidity", data["sensor_value"]);
+            }
+        });
+    </script>
+</body>
+</html>

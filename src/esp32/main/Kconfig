@@ -1,0 +1,29 @@
+menu "Experimental features"
+
+    config TEST_WIFI_AP
+        bool "Test WiFi AP"
+        default n
+        help
+            Test WiFi AP
+
+    config TEST_MQTT5
+        bool "Test MQTT5"
+        default n
+        help
+            Test MQTT5
+
+    config TEST_DEEP_LEARNING
+        bool "Test Deep Learning"
+        default n
+        help
+            Test Deep Learning
+endmenu
+menu "Experimental Flag"
+    
+    config FLAG_TEST_WIFI_CSI
+        bool "Test WiFi CSI"
+        default f
+        help
+            Flag for Wi-Fi CSI functionality test
+
+endmenu

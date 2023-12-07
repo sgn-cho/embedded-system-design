@@ -1,0 +1,13 @@
+# configuration
+.devcontainer/
+.vscode/
+**/.idea/
+**/target/
+
+# build
+**/build/**
+**/sdkconfig
+**/sdkconfig.old
+
+## managed_components
+**/managed_components/**
