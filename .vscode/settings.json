@@ -1,0 +1,9 @@
+{
+    "cmake.sourceDirectory": "C:/Users/User/project_embedded",
+    "idf.adapterTargetName": "esp32s2",
+    "idf.flashType": "UART",
+    "idf.portWin": "COM11",
+    "idf.openOcdConfigs": [
+        "board/esp32s2-bridge.cfg"
+    ]
+}
